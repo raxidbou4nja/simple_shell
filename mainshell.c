@@ -25,6 +25,17 @@ int main(void)
 			break;
 		}
 
+		token_count = tokenize_command(command_line, tokens);
+
+		if (token_count > 0)
+		{
+			command_handler(token_count, tokens);
+		}
+
+		for (i = 0; i < token_count; i++)
+		{
+			free(tokens[i]);
+		}
 	}
 
 	free(command_line);
