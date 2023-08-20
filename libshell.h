@@ -29,7 +29,24 @@ int _atoi(const char *s);
 int _strcmp(const char *s1, const char *s2);
 
 
+/** sys_main_functions.c **/
+int execute_with_path(char* tokens[]);
+int execute_without_path(char* command, char* tokens[]);
+ssize_t _getline(char **lineptr, size_t *n);
+char *_getenv(const char *input);
 
+/** sys_other_functions.c **/
+void print_environment(void);
+void exit_shell(void);
+
+/** command_handler.c **/
+void command_handler(int token_count, char* tokens[]);
+
+
+/** Exec_functions.c **/
+char *find_executable(const char *command);
+void execute_command(const char *command_path, char *tokens[]);
+int tokenize_command(char *command_line, char *tokens[]);
 
 
 #endif
