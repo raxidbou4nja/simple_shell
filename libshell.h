@@ -49,4 +49,7 @@ void execute_command(const char *command_path, char *tokens[]);
 int tokenize_command(char *command_line, char *tokens[]);
 
 
+/** cd_handler.c **/
+void cd_handler(int token_count, char *tokens[]);
+
 #endif

@@ -27,11 +27,16 @@ void command_handler(const char *exec_file_name, int token_count, char *tokens[]
 		}
 
 		exit_status = _atoi(tokens[1]);
-
 		exit(exit_status);
-
 		return;
-}
+	}
+
+
+	if (_strcmp(tokens[0], "cd") == 0)
+	{
+		cd_handler(token_count, tokens);
+		return;
+	}
 
 	executed = execute_without_path(exec_file_name, tokens[0], tokens);
 
