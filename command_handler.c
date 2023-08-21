@@ -8,7 +8,7 @@
  * Return: 0 if similar 1 if not
  */
 
-void command_handler(int token_count, char *tokens[])
+void command_handler(const char *exec_file_name, int token_count, char *tokens[])
 {
 	int executed;
 	int exit_status;
@@ -33,12 +33,12 @@ void command_handler(int token_count, char *tokens[])
 		return;
 }
 
-	executed = execute_without_path(tokens[0], tokens);
+	executed = execute_without_path(exec_file_name, tokens[0], tokens);
 
 	if (executed)
 	{
 		return;
 	}
 
-	executed = execute_with_path(tokens);
+	executed = execute_with_path(exec_file_name, tokens);
 }

@@ -1,15 +1,16 @@
 #include "libshell.h"
 
 /**
-  *execute_with_path - executes a command by specifying its path
+
+	*execute_with_path - executes a command by specifying its path
  *
-  *@tokens: An array of command and arguments
+	*@tokens: An array of command and arguments
  *
-  *Return: On success, returns 0.
-  *On failure, returns an appropriate error code.
+	*Return: On success, returns 0.
+	*On failure, returns an appropriate error code.
  */
 
-int execute_with_path(char *tokens[])
+int execute_with_path(const char *exec_file_name, char *tokens[])
 {
 	if (access(tokens[0], X_OK) == 0)
 	{
@@ -36,24 +37,27 @@ int execute_with_path(char *tokens[])
 	}
 	else
 	{
-		printf("Command '%s' not found or not executable.\n", tokens[0]);
+		printf("%s: 1: %s: not found\n", exec_file_name, tokens[0]);
 		return (0);
 	}
 }
 
 /**
-  *execute_without_path - executes a command without specifying its path
-  *
-  *@command: The full path to the command
-  *@tokens: An array of command and arguments
-  *
-  *Return: On success, returns 0.
-  *On failure, returns an appropriate error code.
+	*execute_without_path - executes a command without specifying its path
+	*
+	*@command: The full path to the command
+	*@tokens: An array of command and arguments
+	*
+	*Return: On success, returns 0.
+	*On failure, returns an appropriate error code.
  */
 
-int execute_without_path(char *command, char *tokens[])
+int execute_without_path(const char *exec_file_name, char *command, char *tokens[])
 {
 	char *command_path = find_executable(command);
+
+	(void)exec_file_name;
+
 
 	if (command_path != NULL)
 	{
@@ -68,12 +72,12 @@ int execute_without_path(char *command, char *tokens[])
 }
 
 /**
-  *_getline - read a line from input stream with dynamic memory allocation
-  *
-  *@lineptr: pointer to the buffer where the line is stored
-  *@n: pointer to the size of the allocated buffer
+	*_getline - read a line from input stream with dynamic memory allocation
+	*
+	*@lineptr: pointer to the buffer where the line is stored
+	*@n: pointer to the size of the allocated buffer
  *
-  *Return: On success, returns the number of characters read
+	*Return: On success, returns the number of characters read
  */
 
 ssize_t _getline(char **lineptr, size_t *n)
@@ -122,11 +126,11 @@ ssize_t _getline(char **lineptr, size_t *n)
 
 
 /**
-  *_getenv - Get the value of an environment variable.
-  *
-  *@input: Name of the environment variable.
-  *
-  *Return: Value of the environment variable, or NULL if not found.
+	*_getenv - Get the value of an environment variable.
+	*
+	*@input: Name of the environment variable.
+	*
+	*Return: Value of the environment variable, or NULL if not found.
  */
 
 char *_getenv(const char *input)
