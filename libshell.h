@@ -19,7 +19,7 @@ int _putchar(char c);
 int _putstr(const char *str);
 size_t _strlen(const char *str);
 char *_strtok(char *string, const char *delim);
-
+void _strncpy(char *destVar, const char *srcVar, size_t num);
 
 /** std_other_functions.c **/
 char *_strdup(const char *src);
@@ -34,10 +34,12 @@ int execute_with_path(const char *exec_file_name, char *tokens[]);
 int execute_without_path(const char *exec_file_name, char *command, char *tokens[]);
 ssize_t _getline(char **lineptr, size_t *n);
 char *_getenv(const char *input);
+int _setenv(const char *name, const char *value, int oWrite);
 
 /** sys_other_functions.c **/
 void print_environment(void);
 void exit_shell(void);
+void update_current_pwd(void);
 
 /** command_handler.c **/
 void command_handler(const char *exec_file_name, int token_count, char *tokens[]);
