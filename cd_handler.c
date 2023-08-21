@@ -1,17 +1,5 @@
 #include "libshell.h"
 
-/**
- * update_current_pwd - Update the PWD environment variable.
- */
-void update_current_pwd(void)
-{
-	char cwd[INITIAL_BUFFER_SIZE];
-
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-	{
-		setenv("PWD", cwd, 1);
-	}
-}
 
 /**
  * cd_handler - Handle the cd command.
@@ -38,10 +26,8 @@ void cd_handler(int token_count, char *tokens[])
 	{
 		update_current_pwd();
 	}
-	else 
+	else
 	{
 		perror("cd");
 	}
-	
-	return;
 }

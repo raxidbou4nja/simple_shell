@@ -37,7 +37,12 @@ int execute_with_path(const char *exec_file_name, char *tokens[])
 	}
 	else
 	{
-		printf("%s: 1: %s: not found\n", exec_file_name, tokens[0]);
+		write(STDOUT_FILENO, exec_file_name, _strlen(exec_file_name));
+		write(STDOUT_FILENO, ": ", 2);
+		write(STDOUT_FILENO, "1", 1);
+		write(STDOUT_FILENO, ": ", 2);
+		write(STDOUT_FILENO, tokens[0], _strlen(tokens[0]));
+		write(STDOUT_FILENO, ": not found\n", 12);
 		return (0);
 	}
 }
