@@ -110,3 +110,24 @@ char *_strtok(char *str, const char *delim)
 		return (token_start);
 	return (NULL);
 }
+
+/**
+ * _strncpy - that copies characters from src to dest
+ *
+ * @destVar: The destination buffer.
+ * @srcVar: The source string.
+ * @num: Maximum number of characters to copy.
+ */
+void _strncpy(char *destVar, const char *srcVar, size_t num)
+{
+	size_t i;
+
+	for (i = 0; i < num && srcVar[i] != '\0'; i++)
+	{
+		destVar[i] = srcVar[i];
+	}
+	for (; i < num; i++)
+	{
+		destVar[i] = '\0';
+	}
+}
