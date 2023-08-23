@@ -1,116 +1,129 @@
 #include "libshell.h"
 
-
 /**
- * find_executable - find the full path of an executable command
+ * find_executable - find full path of an executable command
  *
- * @command: The name of the command to find
+ * @command: command's name to find
  *
- * Return: On success, returns a dynamically allocated string
+ * Return: if success, returns a dynamically allocated string
  */
 
-char *find_executable(const char *command)
+char *find_executable(char *command)
 {
+	static char executable_path[256];
 	char *path = _getenv("PATH");
-	char *path_copy;
-	char *path_token;
-	char *path_delimiter = ":";
-	char *executable_path = NULL;
+	char *cpath = _strdup(path);
+	char *tpath = _strtok(cpath, ":");
 
-	if (path == NULL)
-		return (NULL);
-
-	path_copy = _strdup(path);
-	path_token = _strtok(path_copy, path_delimiter);
-
-	while (path_token != NULL)
+	if (access(command, X_OK) == 0)
 	{
-		executable_path = (char *)malloc(_strlen(path_token) + _strlen(command) + 2);
-		if (executable_path == NULL)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
+		free(cpath);
+		return (command);
+	}
 
-		_strcpy(executable_path, path_token);
+	while (tpath != NULL)
+	{
+		_strcpy(executable_path, tpath);
 		_strcat(executable_path, "/");
 		_strcat(executable_path, command);
 
 		if (access(executable_path, X_OK) == 0)
 		{
-			free(path_copy);
+			free(cpath);
 			return (executable_path);
 		}
 
-		free(executable_path);
-		executable_path = NULL;
-		path_token = _strtok(NULL, path_delimiter);
+		tpath = _strtok(NULL, ":");
 	}
 
-	free(path_copy);
+	free(cpath);
 	return (NULL);
 }
 
+
 /**
- * execute_command - execute a command with specified path and arguments
+ * command_executioner - execute a command with specified path and arguments
  *
- * @command_path: full path of the command to execute
- * @tokens: an array of command and arguments
+ * @exec_file_name: execution file name
+ * @argv: array of command and arguments
+ * @errori: errors counter index
  *
- * Return: function does not return a value.
  */
 
-void execute_command(const char *command_path, char *tokens[])
+void command_executioner(char *exec_file_name, char **argv, int errori)
 {
-	pid_t child_pid = fork();
+	char *prompt = NULL, *actCommand = NULL;
 
-	if (child_pid == -1)
+		prompt = argv[0];
+
+		actCommand = find_executable(prompt);
+
+	if (actCommand != NULL)
 	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (child_pid == 0)
-	{
-		execve(command_path, tokens, NULL);
-		perror("execve");
-		exit(EXIT_FAILURE);
+		pid_t child_pid = fork();
+
+		if (child_pid == -1)
+		{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		else if (child_pid == 0)
+		{
+			execve(actCommand, argv, NULL);
+			free(actCommand);
+			perror("execve");
+			/*exit(EXIT_FAILURE);*/
+		}
+		else
+		{
+			wait(NULL);
+		}
 	}
 	else
 	{
-		wait(NULL);
+		char error_code_str[16];
+
+		snprintf(error_code_str, sizeof(error_code_str), "%d", errori);
+		write(STDOUT_FILENO, exec_file_name, strlen(exec_file_name));
+		write(STDOUT_FILENO, ": ", 2);
+		write(STDOUT_FILENO, error_code_str, strlen(error_code_str));
+		write(STDOUT_FILENO, ": ", 2);
+		write(STDOUT_FILENO, argv[0], strlen(argv[0]));
+		write(STDOUT_FILENO, ": not found\n", 12);
 	}
 }
 
 
 /**
- * tokenize_command - tokenizes the input command line
- * @command_line: input command line string
- * @tokens: array to store tokens
- * Return: number of tokens
+ * toknizer - tokenize a string into commands
+ * @command_line: input string to tokenize
+ * @tokens: array to store the resulting commands
+ *
+ * Return: The number of commands found
  */
 
-int tokenize_command(char *command_line, char *tokens[])
+int toknizer(char *command_line, char *tokens[])
 {
-	char *token;
-	int token_count = 0;
-	const char *delimiter = " \n";
+		char *token;
+		int token_count = 0;
+		const char *delimiter = " \n";
 
-	token = _strtok(command_line, delimiter);
+		token = _strtok(command_line, delimiter);
 
-	while (token != NULL)
-	{
-		char *token_copy = (char *)malloc(_strlen(token) + 1);
+			while (token != NULL)
+			{
+				char *token_copy = (char *)malloc(_strlen(token) + 1);
 
-		if (token_copy == NULL)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
-		_strcpy(token_copy, token);
-		tokens[token_count++] = token_copy;
-		token = _strtok(NULL, delimiter);
-	}
+				if (token_copy == NULL)
+				{
+					perror("malloc");
+					exit(EXIT_FAILURE);
+				}
+				_strcpy(token_copy, token);
+				tokens[token_count++] = token_copy;
+				token = _strtok(NULL, delimiter);
+			}
 
-	tokens[token_count] = NULL;
-	return (token_count);
+			tokens[token_count] = NULL;
+			return (token_count);
 }

@@ -8,9 +8,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #define MAX_COMMAND_LENGTH 100
 #define INITIAL_BUFFER_SIZE 1024
+#define MAX_TOKENS 100
 
 extern char **environ;
 
@@ -31,25 +33,29 @@ int _strcmp(const char *s1, const char *s2);
 
 /** sys_main_functions.c **/
 int execute_with_path(const char *exec_file_name, char *tokens[]);
-int execute_without_path(const char *exec_file_name, char *command, char *tokens[]);
-ssize_t _getline(char **lineptr, size_t *n);
+int execute_without_path(const char *exec_file_name,
+	char *command,
+	char *tokens[]);
 char *_getenv(const char *input);
 int _setenv(const char *name, const char *value, int oWrite);
 
 /** sys_other_functions.c **/
 void print_environment(void);
-void exit_shell(void);
+void handle_exit_command(char *tokens[], int token_count);
 void update_current_pwd(void);
 
 /** command_handler.c **/
-void command_handler(const char *exec_file_name, int token_count, char *tokens[]);
+void command_handler(char *exec_file_name[],
+	char *tokens[],
+	int token_count,
+	int errori);
+
 
 
 /** Exec_functions.c **/
-char *find_executable(const char *command);
-void execute_command(const char *command_path, char *tokens[]);
-int tokenize_command(char *command_line, char *tokens[]);
-
+char *find_executable(char *command);
+void command_executioner(char *exec_file_name, char **argv, int errori);
+int toknizer(char *command_line, char *tokens[]);
 
 /** cd_handler.c **/
 void cd_handler(int token_count, char *tokens[]);
