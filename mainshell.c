@@ -42,8 +42,7 @@ int main(int ac, char **av)
 			}
 			else
 			{
-				errori = errori + 1;
-				command_handler(av, tokens, token_count, errori);
+				command_handler(av, tokens, token_count, errori++);
 				for (j = 0; j < token_count; j++)
 					free(tokens[j]);
 			}
